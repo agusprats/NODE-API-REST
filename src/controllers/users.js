@@ -1,5 +1,6 @@
 const express = require('express');
-const User = require('../models/user');
+const userService = require('../services/userService');
+const Success = require('../handlers/successHandler')
 
 /**
  * 
@@ -10,8 +11,8 @@ const User = require('../models/user');
 const getAllUsers = async (req, res, next) => {
    // throw new Error('Error de testeo de handler');
    try{
-        const users = await User.find();
-        res.status(200).json(users);
+        const users = await userService.findAll();
+        res.json(new Success(users));
    }catch (err){
         next(err);
    }
@@ -21,13 +22,9 @@ const getAllUsers = async (req, res, next) => {
 const createUser = async (req, res, next) => {
     try{
         let user = req.body;
-        user = await User.create(user);
+        user = await userService.save(user);
 
-        const result = {
-        message: 'User created',
-        user
-        }
-        res.status(201).json(result);
+        res.status(201).json(new Success(user));
 }catch (err){
         next(err);
     }   
@@ -37,25 +34,20 @@ const updateUser = async (req, res, next) => {
     try{
         const {id} = req.params;
         let user = req.body;
-        user._id = id;
     
-        await User.updateOne(user)
-        const result = {
-            message: 'User updated',
-            user
-        }
-        res.status(200).json(result);
+        const userUpdated = await userService.update(id, user);
+
+        res.status(200).json(new Success(userUpdated));
     }catch (err){
         next(err);
     } 
 };
 
-const updatePartialUser = (req, res, next)=>{
+const getById = async (req, res, next)=>{
     try{
-        const result = {
-            message: 'User updated with patch'
-        }
-        res.status(200).json(result);
+        const user = await userService.findById(req.params.id);
+        
+        res.status(200).json(new Success(user));
     }catch (err){
         next(err);
     } 
@@ -64,13 +56,10 @@ const updatePartialUser = (req, res, next)=>{
 const deleteUser = async (req, res, next) => {
     try{
         const {id} = req.params;
-    const user = await User.findById(user);
-    user.remove();
+        const user = await userService.remove(id);  
     //o bien const id = req.params.id;
-    const result = {
-        message: `User with id: ${id} Deleted`
-    }
-    res.json(result);
+    
+    res.json(new Success(user));
     }catch (err){
         next(err);
     }  
@@ -80,6 +69,6 @@ module.exports = {
     getAllUsers,
     createUser,
     updateUser,
-    updatePartialUser,
+    getById,
     deleteUser
 }
