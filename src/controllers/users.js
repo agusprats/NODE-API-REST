@@ -11,7 +11,7 @@ const Success = require('../handlers/successHandler')
 const getAllUsers = async (req, res, next) => {
    // throw new Error('Error de testeo de handler');
    try{
-        const users = await userService.findAll();
+        const users = await userService.findAll(req.query.filter, req.query.options);
         res.json(new Success(users));
    }catch (err){
         next(err);
@@ -58,7 +58,7 @@ const deleteUser = async (req, res, next) => {
         const {id} = req.params;
         const user = await userService.remove(id);  
     //o bien const id = req.params.id;
-    
+
     res.json(new Success(user));
     }catch (err){
         next(err);

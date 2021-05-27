@@ -10,6 +10,10 @@ class UserRepository {
         return await User.find();
     }
 
+    async findAllWithPagination(filter, options){
+        return await User.paginate(filter, options)
+    }
+
     async findById(id){
         return await User.findById(id);
     }
