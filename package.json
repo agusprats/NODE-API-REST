@@ -1,6 +1,6 @@
 {
   "name": "noderestserver",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Node Rest Server Base para proyectos",
   "main": "index.js",
   "scripts": {
