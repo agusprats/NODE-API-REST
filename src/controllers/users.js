@@ -1,6 +1,6 @@
 const express = require('express');
 const userService = require('../services/userService');
-const Success = require('../handlers/successHandler')
+const Success = require('../handlers/successHandler');
 
 /**
  * 
