@@ -6,6 +6,7 @@ const {
     getById, 
     deleteUser
 } = require('../controllers/users');
+
 const {
     postRequestValidations,
     putRequestValidations

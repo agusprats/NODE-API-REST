@@ -1,12 +1,13 @@
-const { check, validationResult } = require('express-validator');
+const {check} = require('express-validator');
 const AppError = require('../../errors/appError');
 const userService = require('../../services/userService');
 const {ROLES} = require('../../constants/index')
+const {validationResult} = require('../commons');
 
 const _nameRequired = check('name', 'Name required').not().isEmpty();
 const _lastNameRequired = check('lastName', 'Lastname required').not().isEmpty();
-const _emailRequired = check('email', 'email required').not().isEmpty();
-const _emailValid= check('email', 'Email is Valid').isEmail();
+const _emailRequired = check('email', 'Email required').not().isEmpty();
+const _emailValid= check('email', 'Email is invalid').isEmail();
 const _emailExist = check('email').custom(
     async (email = '') => {
         const userFound = await userService.findByEmail(email);
@@ -26,7 +27,7 @@ const _optionalEmailExist = check('email').optional().custom(
     }
 );
 
-const _passwordRequired = check('password', 'password required').not().isEmpty();
+const _passwordRequired = check('password', 'Password required').not().isEmpty();
 
 const _roleValid = check('role').optional().custom(
     async (role = '') => {
@@ -50,13 +51,6 @@ const _idExist = check('id').custom(
     }
 );
 
-const _validationResult = (req, res, next) => {
-    const errors  = validationResult(req);
-    if(!errors.isEmpty()){
-        throw new AppError('Validation Errors', 400, errors.errors);   
-    }
-    next();
-}
 
 const postRequestValidations = [
     _nameRequired,
@@ -67,7 +61,7 @@ const postRequestValidations = [
     _passwordRequired,
     _roleValid,
     _dateValid,
-    _validationResult
+    validationResult
 ]
 
 const putRequestValidations = [
@@ -78,7 +72,7 @@ const putRequestValidations = [
     _optionalEmailValid,
     _roleValid,
     _dateValid,
-    _validationResult
+    validationResult
 ]
 
 module.exports = {

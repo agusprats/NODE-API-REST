@@ -5,7 +5,7 @@ const logger = require('./logger');
 
 module.exports = async () => {
     await mongooseLoader();
-    logger.info('DB Connected  and Connected');
+    logger.info('DB Loaded and Connected');
 
     const server = new ExpressServer();
     logger.info('Express Loaded');
