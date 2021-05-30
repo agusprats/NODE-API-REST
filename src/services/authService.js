@@ -9,7 +9,7 @@ const login = async(email, password) => {
 
         const user = await userService.findByEmail(email);
         if(!user){
-            throw new AppError('Email / Password Authentication Failed... Try again', 401);
+            throw new AppError('Email / Password incorrect, Authentication Failed... Try again', 401);
         }
 
         if(!user.enable){
@@ -18,7 +18,7 @@ const login = async(email, password) => {
 
         const validatePassword = await bcrypt.compare(password, user.password);
         if(!validatePassword){
-            throw new AppError('Email / Password Authentication Failed... Try again', 401);
+            throw new AppError('Email / Password incorrect, Authentication Failed... Try again', 401);
         }
 
         const token = _encrypt(user._id);
@@ -57,7 +57,7 @@ const validToken = async (token) => {
         throw new AppError('Authentication failed! User not found', 401);
     }
     //Si el usuario existe, que este habilitado
-    if(!user.enabled){
+    if(!user.enable){
         throw new AppError('Authentication failed! User disabled', 401);
     }
     //retornar el usuario
